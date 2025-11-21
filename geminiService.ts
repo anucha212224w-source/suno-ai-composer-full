@@ -83,6 +83,32 @@ const handleGeminiError = (error: unknown, language: Language): Error => {
     return new Error(displayMessage);
 };
 
+// Create an AI client wrapper that uses a server-side proxy when running in the browser.
+// The proxy endpoint is implemented at `/api/generate` and will forward calls to the
+// Google GenAI server-side using a server-side API key stored in `GOOGLE_API_KEY`.
+const createAI = (apiKey: string) => {
+    const isBrowser = typeof window !== 'undefined';
+    if (!isBrowser) {
+        return new GoogleGenAI({ apiKey });
+    }
+    return {
+        models: {
+            async generateContent(payload: any) {
+                const resp = await fetch('/api/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'generateContent', payload, apiKey }),
+                });
+                if (!resp.ok) {
+                    const text = await resp.text();
+                    throw new Error(`Proxy error ${resp.status}: ${text}`);
+                }
+                return await resp.json();
+            }
+        }
+    } as any;
+};
+
 // --- Sanitization Functions ---
 
 /**
@@ -152,7 +178,7 @@ const translateTagsToEnglish = async (tags: string[], language: Language, apiKey
 Tags: ${tags.join(', ')}`;
     
     try {
-        const ai = new GoogleGenAI({ apiKey });
+        const ai = createAI(apiKey);
         // Translation is a simple task, keep it fast/cheap with Flash
         const response = await ai.models.generateContent({
             model: 'gemini-2.5-flash', 
@@ -187,7 +213,7 @@ const translateTextToEnglish = async (text: string, language: Language, apiKey: 
     const prompt = `Translate the following text from ${sourceLanguage} to English. Return ONLY the translated English text, with no extra formatting, labels, or explanations.\n\nText: "${text}"`;
     
     try {
-        const ai = new GoogleGenAI({ apiKey });
+        const ai = createAI(apiKey);
         // Translation is a simple task, keep it fast/cheap with Flash
         const response = await ai.models.generateContent({
             model: 'gemini-2.5-flash',
@@ -379,12 +405,12 @@ export const generateSong = async (params: GenerateSongParams, apiKey: string): 
   
   const fullPrompt = getMasterPrompt(params, finalStyle);
 
-  try {
-    const ai = new GoogleGenAI({ apiKey });
-    const response = await ai.models.generateContent({
-      model: params.model, // Uses the selected model (default 3 Pro)
-      contents: { parts: [{ text: fullPrompt }] },
-    });
+        try {
+        const ai = createAI(apiKey);
+        const response = await ai.models.generateContent({
+            model: params.model, // Uses the selected model (default 3 Pro)
+            contents: { parts: [{ text: fullPrompt }] },
+        });
     
     let songText = response.text;
 
@@ -444,7 +470,7 @@ Now, generate the revised song based on the user's request, following all rules 
 export const reviseSong = async (originalSong: string, revisionRequest: string, model: string, language: Language, apiKey: string): Promise<string> => {
     const prompt = getRevisionPrompt(originalSong, revisionRequest, language);
     try {
-        const ai = new GoogleGenAI({ apiKey });
+        const ai = createAI(apiKey);
         const response = await ai.models.generateContent({
             model: model, // Use the same model as the original generation for consistency
             contents: { parts: [{ text: prompt }] },
@@ -502,7 +528,7 @@ export const generateImagePrompt = async (songData: string, inputs: FormState, l
     Now, generate the prompt based on the provided song analysis.`;
 
     try {
-        const ai = new GoogleGenAI({ apiKey });
+        const ai = createAI(apiKey);
         // Use 2.5 Flash for prompt generation as it's efficient and capable enough
         const response = await ai.models.generateContent({
             model: 'gemini-2.5-flash',
@@ -636,7 +662,7 @@ export const generateVocalPreview = async (songData: string, language: Language,
     }
 
     try {
-        const ai = new GoogleGenAI({ apiKey });
+        const ai = createAI(apiKey);
         const response = await ai.models.generateContent({
             model: "gemini-2.5-flash-preview-tts",
             contents: { parts: [{ text: lyrics }] },
@@ -662,7 +688,7 @@ export const generateRandomIdea = async (language: Language, apiKey: string): Pr
     const prompt = `As an acclaimed A&R executive with a golden ear for hits, pitch a single, modern, and commercially viable song concept in ${langName}. The idea must feel fresh, culturally relevant, and tap into a genuine human emotion. Present it as a high-concept, one-sentence pitch. Return ONLY the pitch, with no extra text, labels, or quotation marks.`;
 
     try {
-        const ai = new GoogleGenAI({ apiKey });
+        const ai = createAI(apiKey);
         // Use 3 Pro for better creativity
         const response = await ai.models.generateContent({
             model: 'gemini-3-pro-preview',
@@ -691,7 +717,7 @@ export const generateRandomNarrative = async (language: Language, apiKey: string
     };
 
     try {
-        const ai = new GoogleGenAI({ apiKey });
+        const ai = createAI(apiKey);
         // Use 3 Pro for deep narrative generation
         const response = await ai.models.generateContent({
             model: 'gemini-3-pro-preview',
@@ -727,7 +753,7 @@ User Idea: "${mainIdea}"`;
     };
 
     try {
-        const ai = new GoogleGenAI({ apiKey });
+        const ai = createAI(apiKey);
         // Use 3 Pro for complex narrative expansion
         const response = await ai.models.generateContent({
             model: 'gemini-3-pro-preview',
@@ -792,7 +818,7 @@ Return the result as a JSON object. Ensure all tags are in ${langName}.`;
     };
 
     try {
-        const ai = new GoogleGenAI({ apiKey });
+        const ai = createAI(apiKey);
         // Use 3 Pro for accurate musical analysis
         const response = await ai.models.generateContent({
             model: 'gemini-3-pro-preview',
@@ -852,7 +878,7 @@ Return ONLY a JSON object with the keys "genres", "moods", "tempos", and "instru
     };
     
     try {
-        const ai = new GoogleGenAI({ apiKey });
+        const ai = createAI(apiKey);
         // Use 3 Pro for creative style matching
         const response = await ai.models.generateContent({
             model: 'gemini-3-pro-preview',
@@ -903,7 +929,7 @@ Song Concept:
     };
     
     try {
-        const ai = new GoogleGenAI({ apiKey });
+        const ai = createAI(apiKey);
         // Use 3 Pro for structural planning
         const response = await ai.models.generateContent({
             model: 'gemini-3-pro-preview',
