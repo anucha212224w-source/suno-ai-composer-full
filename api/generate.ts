@@ -24,16 +24,30 @@ async function retryFetch(fn: () => Promise<any>) {
 }
 
 export default async function handler(req: NowRequest, res: NowResponse) {
-  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
 
   const apiKey = process.env.GOOGLE_API_KEY;
   if (!apiKey) {
+    console.error('Missing GOOGLE_API_KEY in environment');
     return res.status(500).json({ error: 'Server missing GOOGLE_API_KEY' });
   }
 
-  const body = req.body || {};
+  // Accept JSON bodies; if body is string try to parse
+  let body: any = req.body || {};
+  if (typeof body === 'string') {
+    try {
+      body = JSON.parse(body);
+    } catch (e) {
+      console.warn('Could not parse request body as JSON');
+    }
+  }
+
   const action = body.action;
   const payload = body.payload || {};
+
+  console.info(`/api/generate called - action=${action}");
 
   const ai = new GoogleGenAI({ apiKey });
 
@@ -43,12 +57,22 @@ export default async function handler(req: NowRequest, res: NowResponse) {
       return res.status(200).json(result);
     }
 
-    // Fallback: echo
+    // Fallback: unknown action
+    console.warn('Unknown action in /api/generate:', action);
     return res.status(400).json({ error: 'Unknown action' });
   } catch (error: any) {
-    console.error('Proxy error', error?.message || error);
-    // Try to unwrap known structures
-    if (error && error.status) return res.status(error.status).json({ error: error.message });
-    return res.status(500).json({ error: String(error) });
+    // Detailed logging for debugging (do not leak secrets)
+    console.error('Proxy error - message:', error?.message);
+    if (error?.response) {
+      try {
+        console.error('Proxy error - response data:', JSON.stringify(error.response, Object.getOwnPropertyNames(error.response)));
+      } catch (e) {
+        console.error('Failed to stringify error.response');
+      }
+    }
+
+    const status = error?.status || error?.response?.status || 500;
+    const safeMessage = (process.env.NODE_ENV === 'production') ? 'Server error' : (error?.message || String(error));
+    return res.status(status).json({ error: safeMessage });
   }
 }
