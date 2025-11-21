@@ -1,0 +1,306 @@
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230f0f11'/%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='32' y2='32' gradientUnits='userSpaceOnUse'%3E%3Cstop stop-color='%2322d3ee'/%3E%3Cstop offset='1' stop-color='%23d946ef'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M23 9v11.3c-1.1-.7-2.5-1.3-4-1.3-3.9 0-7 2.7-7 6s3.1 6 7 6 7-2.7 7-6V13h-9V9h9z' fill='url(%23g)'/%3E%3Cpath d='M8 6l2 4 4 2-4 2-2 4-2-4-4-2 4-2z' fill='%23ffffff'/%3E%3C/svg%3E" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Suno AI Studio: Pro Edition</title>
+
+  <!-- Social Media Share Tags (Open Graph) -->
+  <meta property="og:title" content="Suno AI Studio: Pro Edition | The Ultimate AI Music Director" />
+  <meta property="og:description" content="ปลดล็อกขีดจำกัด Suno AI ด้วยเครื่องมือระดับโปร แต่งเนื้อร้อง กำกับอารมณ์ และวิเคราะห์สไตล์เพลงด้วย Gemini 3 Pro" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Suno AI Studio" />
+  <meta property="og:url" content="https://suno-ai-composer.vercel.app/" />
+  <meta property="og:image" content="https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?q=80&w=1200&auto=format&fit=crop" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Suno AI Studio: Pro Edition" />
+  <meta name="twitter:description" content="เปลี่ยนไอเดียเป็นเพลงระดับมาสเตอร์พีซสำหรับ Suno AI ด้วยพลังของ Gemini 3 Pro และเครื่องมือระดับสตูดิโอ" />
+  <meta name="twitter:image" content="https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?q=80&w=1200&auto=format&fit=crop" />
+  
+  <meta name="theme-color" content="#050506">
+  <!-- End of Social Media Share Tags -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+<style>
+  :root {
+    /* Dark Theme (Default - Pro Studio) */
+    --color-bg: #050506; /* Ultra Dark */
+    --color-bg-light: #121214; /* Panel BG */
+    --color-panel: #0f0f11; 
+    --color-border: #27272a;
+    --color-border-highlight: #3f3f46;
+    
+    --color-text-primary: #ffffff;
+    --color-text-secondary: #a1a1aa;
+    --color-text-tertiary: #52525b;
+    
+    /* Neon Brand Colors */
+    --color-primary-brand: #d946ef; /* Fuchsia (Used for Brand/Logo) */
+    --color-primary-brand-dim: rgba(217, 70, 239, 0.2);
+    
+    /* Active State Color (GREEN - Updated) */
+    --color-active: #22c55e; /* Green-500 */
+    --color-active-dim: rgba(34, 197, 94, 0.3);
+    
+    --color-accent-cyan: #22d3ee; /* Cyan */
+    --color-accent-cyan-dim: rgba(34, 211, 238, 0.2);
+    
+    --color-input-bg: #000000;
+    --color-selected-bg: rgba(34, 197, 94, 0.15); /* Green Tint */
+    
+    --shadow-glow: 0 0 10px rgba(34, 197, 94, 0.3);
+    --shadow-panel: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+    
+    --color-overlay-bg: rgba(5, 5, 6, 0.9);
+    --color-error: #ef4444;
+  }
+
+  body.light-theme {
+    --color-bg: #f8fafc;
+    --color-bg-light: #ffffff;
+    --color-panel: #ffffff;
+    --color-border: #e2e8f0;
+    --color-border-highlight: #cbd5e1;
+    
+    --color-text-primary: #0f172a;
+    --color-text-secondary: #475569;
+    --color-text-tertiary: #94a3b8;
+    
+    --color-primary-brand: #7c3aed;
+    --color-primary-brand-dim: rgba(124, 58, 237, 0.1);
+    
+    --color-active: #16a34a; /* Green-600 */
+    --color-active-dim: rgba(22, 163, 74, 0.1);
+
+    --color-accent-cyan: #0891b2;
+    
+    --color-input-bg: #f1f5f9;
+    --color-selected-bg: rgba(22, 163, 74, 0.1);
+    
+    --shadow-glow: 0 0 5px rgba(22, 163, 74, 0.2);
+    --shadow-panel: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    --color-overlay-bg: rgba(255, 255, 255, 0.9);
+  }
+
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-text-primary);
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  /* Force dark scrollbars and inputs */
+  input, textarea, select {
+      color-scheme: dark; 
+  }
+
+  /* Utilities */
+  .glass-panel-pro {
+    background: linear-gradient(145deg, var(--color-panel), var(--color-bg-light));
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-panel);
+  }
+
+  .panel-header {
+    background: linear-gradient(90deg, var(--color-primary-brand-dim) 0%, transparent 100%);
+    border-left: 3px solid var(--color-primary-brand);
+    padding: 0.5rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    border-radius: 0 4px 4px 0;
+  }
+
+  /* Standard Input Style (Used in Main Form) */
+  .input-screen {
+    background-color: var(--color-input-bg) !important;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-primary) !important;
+    box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+    font-family: 'Inter', sans-serif;
+    transition: all 0.2s;
+  }
+  .input-screen:focus {
+    outline: none;
+    border-color: var(--color-active);
+    box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 0 0 1px var(--color-active);
+  }
+
+  /* Modal Input Style (Used in Modals/Popups) - Fix for white background issue */
+  .input-base {
+    background-color: var(--color-input-bg) !important;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-primary) !important;
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    outline: none;
+    transition: all 0.2s;
+    appearance: none;
+  }
+  .input-base:focus {
+    border-color: var(--color-active);
+    box-shadow: 0 0 0 1px var(--color-active);
+  }
+
+  /* Secure Input Style (Used for API Keys / Terminal look) */
+  .input-secure {
+    background-color: #0a0a0a !important; /* Very dark */
+    border: 1px solid var(--color-border);
+    color: var(--color-accent-cyan) !important;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.05em;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+    transition: all 0.3s ease;
+  }
+  .input-secure:focus {
+    border-color: var(--color-accent-cyan);
+    box-shadow: 0 0 15px rgba(34, 211, 238, 0.2), inset 0 2px 4px rgba(0,0,0,0.5);
+    outline: none;
+  }
+  
+  /* Force override browser autofill styling */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover, 
+  input:-webkit-autofill:focus, 
+  input:-webkit-autofill:active {
+      -webkit-box-shadow: 0 0 0 30px var(--color-input-bg) inset !important;
+      -webkit-text-fill-color: var(--color-text-primary) !important;
+      transition: background-color 5000s ease-in-out 0s;
+      caret-color: var(--color-text-primary);
+  }
+
+  .btn-rack {
+    background: var(--color-bg-light);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-rack:hover:not(:disabled) {
+    border-color: var(--color-text-tertiary);
+    color: var(--color-text-primary);
+    background: var(--color-border);
+  }
+  .btn-rack.active {
+    border-color: var(--color-active);
+    color: var(--color-active);
+    background: var(--color-selected-bg);
+    box-shadow: 0 0 10px var(--color-active-dim);
+    font-weight: 700;
+  }
+
+  .led-indicator {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #3f3f46; /* Inactive grey */
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.5);
+    transition: all 0.3s ease;
+  }
+  /* Green LED when active */
+  .active .led-indicator, .btn-rack.active .led-indicator {
+    background-color: var(--color-active);
+    box-shadow: 0 0 6px var(--color-active), inset 0 0 2px white;
+  }
+  .active .led-indicator-cyan {
+      background-color: var(--color-accent-cyan);
+      box-shadow: 0 0 6px var(--color-accent-cyan), inset 0 0 2px white;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+  .custom-scrollbar::-webkit-scrollbar-track { background: var(--color-bg); }
+  .custom-scrollbar::-webkit-scrollbar-thumb { background-color: var(--color-border); border-radius: 3px; border: 1px solid var(--color-bg); }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover { background-color: var(--color-text-tertiary); }
+
+  .sharp-ui { border-radius: 4px; }
+  .rounded-xl { border-radius: 12px; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes reveal { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
+  
+  .animate-fade-in { animation: fadeIn 0.3s ease-out forwards; }
+  .animate-reveal { animation: reveal 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+  /* Generate Button Flow */
+  @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+  }
+
+  .btn-neon-flow {
+    background: linear-gradient(-45deg, #d946ef, #a855f7, #22d3ee, #d946ef);
+    background-size: 300% 300%;
+    animation: gradientMove 4s ease infinite;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 800;
+    box-shadow: 0 4px 15px rgba(217, 70, 239, 0.4);
+    border: 1px solid rgba(255,255,255,0.2);
+  }
+  .btn-neon-flow:hover {
+      box-shadow: 0 0 25px rgba(217, 70, 239, 0.6);
+      border-color: white;
+  }
+  .btn-neon-flow.is-loading {
+      animation: none;
+      background: var(--color-border);
+      color: var(--color-text-secondary);
+      box-shadow: none;
+  }
+  
+  .btn-danger-pro {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #fca5a5; /* Red-300 */
+      transition: all 0.2s;
+  }
+  .btn-danger-pro:hover {
+      background: rgba(239, 68, 68, 0.2);
+      border-color: #ef4444;
+      color: #ffffff;
+      box-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
+  }
+
+  /* Mobile Optimization */
+  @media (max-width: 640px) {
+      .panel-header {
+          padding: 0.75rem;
+          font-size: 1.1rem;
+      }
+  }
+</style>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react-dom/client": "https://aistudiocdn.com/react-dom@^19.2.0/client",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.29.0",
+    "vite": "https://aistudiocdn.com/vite@^7.2.2",
+    "@vitejs/plugin-react": "https://aistudiocdn.com/@vitejs/plugin-react@^5.1.0",
+    "path": "https://aistudiocdn.com/path@^0.12.7",
+    "url": "https://aistudiocdn.com/url@^0.11.4"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body>
+  <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>

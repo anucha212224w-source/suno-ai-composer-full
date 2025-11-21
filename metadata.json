@@ -1,0 +1,22 @@
+{
+  "name": "Suno AI Studio: Pro Edition",
+  "short_name": "Suno Studio",
+  "description": "Professional AI Music Director & Lyricist for Suno AI. Powered by Gemini 3 Pro.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#050506",
+  "theme_color": "#050506",
+  "icons": [
+    {
+      "src": "https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?q=80&w=192&auto=format&fit=crop",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?q=80&w=512&auto=format&fit=crop",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "requestFramePermissions": []
+}
